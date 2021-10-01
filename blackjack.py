@@ -1,10 +1,12 @@
 #zona de import
 import pygame
 from pygame import *
+from enum import Enum,IntEnum
+import random
 
 
 
-#crear la interfaz grafica
+#######################crear la interfaz grafica#######################
 pygame.init()
 
 VENTANA = pygame.display.set_mode([710,440])
@@ -26,3 +28,34 @@ while run_game:
     tiempo.tick(60)
 
 pygame.quit()
+
+
+#################clase carta#######################
+class Carta():
+    def __init__(self,suit,simbolo,valor,color):
+        self.value = suit
+        self.value = simbolo
+        self.value = valor
+        self.value = color
+
+#datos de las cartas
+Valor_carta = [11,2,3,4,5,6,7,8,9,10,10,10]
+Simbolo_carta = list(range(1,14))
+Suit_carta = list(range(1,5))
+
+#########################clase dealer#####################
+
+class Dealer():
+    def dealer():
+        deck = []
+        for j in range(len(Valor_carta)):
+            for k in Suit_carta:
+                deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k))
+
+        return deck
+
+#########################Clase player#########################
+
+
+
+########################Repartir cartas######################
