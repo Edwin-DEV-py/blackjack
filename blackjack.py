@@ -23,11 +23,12 @@ while run_game:
             run_game = False #para cerrarlo solo es darle a la X
     
     VENTANA.blit(fondo,[0,0])
-
     pygame.display.flip()
     tiempo.tick(60)
 
 pygame.quit()
+##########################crear los botones###########################
+
 
 
 #################clase carta#######################
@@ -59,3 +60,17 @@ class Dealer():
 
 
 ########################Repartir cartas######################
+##Buscar las cartas dentro del array
+def buscar_carta(valor,suit):
+    if suit == 'pica':
+        T = 1
+    elif suit == 'trebol':
+        T = 2
+    elif suit == 'diamante':
+        T = 3
+    elif suit == 'corazon':
+        T = 4
+    else:
+        print("error")
+    
+    return (valor-1)*4 + (T-1)
