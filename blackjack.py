@@ -1,4 +1,5 @@
 #zona de import
+from _typeshed import Self
 import pygame
 from pygame import *
 from enum import Enum,IntEnum
@@ -28,6 +29,53 @@ while run_game:
     tiempo.tick(60)
 
 pygame.quit()
+
+####################Boton#######################
+
+# codigo para implementar boton de inicio 
+# self.play_boton = boton(self, "Play")
+
+# codigo para poner la pantalla de jugar en el caso que no se encuentre en partida
+# if not self.juego_activado:
+#     self.play_boton.dibujaboton()
+
+# codigo para evento en el que al precionar play lo envia al juego
+# elif event.type == pygame.MOUSEBUTTONDOWN:
+#     mousepos = pygame.mouse.get_pos()
+#     self.checaboton(mousepos)
+
+class Botton:
+    def __init__(self, a_game, texto):
+        self.screen = a_game.screen
+        self.screen_rect = self.screen.get_rect()
+        self.width, self.height = 200, 50
+        self.color = (255,0,0)
+        self.textcolor = (255, 255, 255)
+
+        self.font = pygame.font.sysfont(None, 48)
+
+        self.rect = pygame.Rect(0,0, self.width, self.height)
+        self.rect.center = self.screen_rect.center
+
+        self.prepara_texto(texto)
+
+#boton inicio
+    def prepara_texto(self, texto):
+        self.texto_image = self.font.render(texto, True, self.textcolor, self.color)
+        self.texto_image_rect = self.texto_image.get_rect()
+        self.texto_image_rect.center = self.rect.center
+
+    def dibujaboton(self):
+        self.screen.fill(self.color, self.rect)
+        self.screen.blit(self.texto_image, self.texto_image_rect)
+    
+#boton de reiniciar cuando el juego no se este ejecutando
+
+    def checaboton(self, mousepos):
+        self.botonp = self.play_boton.rect.colllidepoint(mousepos)
+        if self.botonp and not self.run_game:
+            self.estadistica.reinicia()
+            self.run_game = True
 
 
 #################clase carta#######################
