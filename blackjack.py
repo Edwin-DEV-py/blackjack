@@ -1,8 +1,11 @@
 #zona de import
+from typing import Sequence
 import pygame
 from pygame import *
 from enum import Enum,IntEnum
 import random
+
+from pruebas import AI_hit
 
 
 
@@ -131,18 +134,10 @@ run_game = True
 
 while run_game:
 #evento del mouse
-    mouse_pos = pygame.mouse.get_pos()
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game = False #para cerrarlo solo es darle a la X
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if boton_mano.rect.collidepoint(mouse_pos):
-                run_game = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if boton_x.rect.collidepoint(mouse_pos):
-                run_game = False
-    #reiniciar juego
+        #reiniciar juego
     if keys[pygame.K_ESCAPE]:
         full_deck = list(original_deck)
         run_game = True
@@ -154,6 +149,19 @@ while run_game:
         player_hand = []
         AI_hand = []
         hidden_hand = []
+    mouse_pos = pygame.mouse.get_pos()
+
+
+        #el jugador decide coger una carta
+    if event.type == pygame.MOUSEBUTTONDOWN:
+         if boton_mano.rect.collidepoint(mouse_pos) and main_loop == 0 and session:
+            jugador_elije_carta()
+            main_loop = 1
+
+            AI_hit = IA_elije_carta()
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if boton_x.rect.collidepoint(mouse_pos):
+            run_game = False
 
     VENTANA.blit(imagen_mano,[500,200])
     VENTANA.blit(imagen_x,[622,280])
