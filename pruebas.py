@@ -22,98 +22,7 @@ class Card():
         self.image = P      # Card Picture
 
 
-# Create deck of card objects
-def initializeDeck():
-    # Initialize Empty Deck
-    deck = []
-    for j in range(len(CARD_VALUES)):
-        for k in CARD_SUITS:
-            # Create card object and append to deck
-            deck.append(Card(CARD_VALUES[j], CARD_NAMES[j], k))
 
-    return deck
-
-
-# Find card index of a 1D card storage array/list
-def card_index(V,S):
-    if S == 'S':
-        T = 1
-    elif S == 'C':
-        T = 2
-    elif S == 'D':
-        T = 3
-    elif S == 'H':
-        T = 4
-    else:
-        print("Error with T in card_index()")
-
-    return (V-1)*4 + (T-1)
-
-
-
-# Randomly select a card from the deck
-def get_random_card():
-    global full_deck
-    r = random.randint(0,len(full_deck)-1)
-    # print(len(full_deck), end=' ')
-    # print(r)
-
-    # Remove and return a card from the deck
-    return full_deck.pop(r)
-
-
-# Assign card from deck into player's hand
-def player_draw_cards():
-    global card_x_pos
-    global card_y_pos
-
-    # Add card into player's hand
-    player_hand.append(get_random_card())
-
-
-
-# Assign card from deck into AI's hand
-def AI_draw_card():
-    global AI_card_x_pos
-    global AI_card_y_pos
-    global hidden_card_x_pos
-    global hidden_card_y_pos
-
-    # If AI's card value is under 18, draw card.
-    if get_card_value(AI_hand) < 18:
-        AI_hand.append(get_random_card())
-
-
-
-        # Did AI draw a card?
-        return True
-    else:
-        return False
-
-
-# Obtain current score of player / AI hand      
-def get_card_value(hand):
-    # If hand is empty, return zero
-    if len(hand) == 0:
-        return 0
-    else:
-        # Initialize variables
-        Aces = []
-        sum = 0
-
-        # Go through entire hand
-        for i in hand:
-            # How many aces exist in the hand?
-            if i.name == 1:
-                Aces.append(i)
-
-            # Sum of card values
-            sum += i.value
-        
-        # Reduce value of aces to prevent bust
-        if sum > 21 and (len(Aces) != 0):
-            sum -= 10
-        return sum
 
 
 # Display texts on screen / GUI
@@ -150,48 +59,7 @@ def draw_texts():
 
 
 
-## INITIALIZE VARIABLES
 
-# Create GUI
-pygame.init()
-
-# Initialize GUI window
-WIN_WIDTH = 500
-WIN_HEIGHT = 500
-win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-pygame.display.set_caption("BlackJack (Final Project by Myron Ho)")
-
-
-# Initialize Card Data
-CARD_VALUES = [11,2,3,4,5,6,7,8,9,10,10,10,10]
-CARD_NAMES = list(range(1,14))
-CARD_SUITS = list(range(1,5))
-
-# Define Pixel Size of Card
-CARD_WIDTH = 100
-CARD_HEIGHT = 150
-
-card_img_dir = []
-card_img = []
-
-# Define colors in RGB values
-black = (0,0,0)
-white = (255,255,255)
-
-
-
-
-# Initialize Player and AI deck
-player_hand = []
-
-
-AI_hand = []
-
-
-hidden_hand = []
-
-AI_DEFAULT_Y = 45
-DEFAULT_OFFSET = 30
 
 
 # Initialize Font and Score Texts
@@ -213,10 +81,6 @@ reveal = False
 session = True
 spectate = False
 
-
-# Create deck and a copy of the deck to maintain original copy
-original_deck = initializeDeck()
-full_deck = list(original_deck)
 
 
 # Main Game Loop
