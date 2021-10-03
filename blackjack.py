@@ -15,6 +15,10 @@ VENTANA = pygame.display.set_mode([710,440])
 tiempo = pygame.time.Clock()
 ganar_WIDTH = 710
 ganar_HEIGHT = 440
+white = (255, 255, 255)
+black = (0, 0, 0)
+CARD_WIDTH = 100
+CARD_HEIGHT = 150
 ganar = pygame.display.set_mode((ganar_WIDTH, ganar_HEIGHT))
 pygame.display.set_caption("Mesa de Blackjack")
 
@@ -188,8 +192,7 @@ while run_game:
         if boton_x.rect.collidepoint(mouse_pos):
             run_game = False
 
-    VENTANA.blit(imagen_mano,[500,200])
-    VENTANA.blit(imagen_x,[622,280])
+
     VENTANA.blit(fondo,[0,0])
     boton_mano.dibujar()
     boton_x.dibujar()
