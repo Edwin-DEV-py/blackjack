@@ -15,19 +15,25 @@ pygame.display.set_caption("Mesa de Blackjack")
 
 fondo = pygame.image.load("fondo.png").convert()
 
-run_game = True
-
-while run_game:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run_game = False #para cerrarlo solo es darle a la X
-    
-    VENTANA.blit(fondo,[0,0])
-    pygame.display.flip()
-    tiempo.tick(60)
-
-pygame.quit()
 ####################Boton#######################
+imagen_mano = pygame.image.load("mano.png").convert_alpha()
+imagen_x = pygame.image.load("pasar.png").convert_alpha()
+#class boton
+class Boton():
+    def __init__(self,x,y,image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x,y)
+
+    def dibujar(self):
+        VENTANA.blit(self.image,(self.rect.x, self.rect.y)) #dibujar el boton en la panytalla
+#crear la instancia del boton
+boton_mano = Boton(622,269, imagen_mano)
+boton_x = Boton(622,337, imagen_x)
+##click##################
+
+
+
 #################clase carta#######################
 class Carta():
     def __init__(self,suit,simbolo,valor,color):
@@ -52,8 +58,6 @@ class Dealer():
 
         return deck
 
-original_deck = Dealer()
-full_deck = list(original_deck)
 
 #########################Clase player#########################
 
@@ -116,8 +120,50 @@ def obtener_valor_carta(mano):
         if suma > 21 and (len(Aces) != 0): #cuando la suma es mas de 21 y hay un As
             suma -= 10
         return suma
+##########delaer expand
+original_deck = Dealer()
 
-## el jugador decide elejir otra carta
+###########el programa lee las teclas#########
+keys = pygame.key.get_pressed()
 
+#loop#########################################3
+run_game = True
 
-#
+while run_game:
+#evento del mouse
+    mouse_pos = pygame.mouse.get_pos()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run_game = False #para cerrarlo solo es darle a la X
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if boton_mano.rect.collidepoint(mouse_pos):
+                run_game = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if boton_x.rect.collidepoint(mouse_pos):
+                run_game = False
+    #reiniciar juego
+    if keys[pygame.K_ESCAPE]:
+        full_deck = list(original_deck)
+        run_game = True
+        session = True
+        main_loop = 0
+        win_int = 0
+        reveal = False
+        session = True
+        player_hand = []
+        AI_hand = []
+        hidden_hand = []
+
+    VENTANA.blit(imagen_mano,[500,200])
+    VENTANA.blit(imagen_x,[622,280])
+    VENTANA.blit(fondo,[0,0])
+    boton_mano.dibujar()
+    boton_x.dibujar()
+    pygame.display.flip()
+    tiempo.tick(60)
+
+############delaer expand
+full_deck = list(original_deck)
+
+pygame.quit()
