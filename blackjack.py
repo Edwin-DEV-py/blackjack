@@ -147,7 +147,7 @@ while run_game:
         reveal = False
         session = True
         player_hand = []
-        AI_hand = []
+        IA_hand = []
         hidden_hand = []
     mouse_pos = pygame.mouse.get_pos()
 
@@ -158,7 +158,40 @@ while run_game:
             jugador_elije_carta()
             main_loop = 1
 
-            AI_hit = IA_elije_carta()
+            IA_hit = IA_elije_carta()
+            print("IA", end='')
+            print(obtener_valor_carta(IA_hand))
+
+            #evaluar las posibilidade
+            if obtener_valor_carta(IA_hand) > 21 and obtener_valor_carta(player_hand) > 21:
+                session = False
+                print("No ganadores")
+                win_int = 5
+                reveal = True
+                #player gana y IA sobrepasa el numero 
+            elif obtener_valor_carta(IA_hand) > 21:
+                session = False
+                print("AI sobrepaso, jugador gana")
+                win_int = 4
+                reveal = True
+                #IA gana y player sobrepasa el numero
+            elif obtener_valor_carta(player_hand) > 21:   
+                print('Jugador sobrepaso, IA gana')
+                win_int = 3
+                session = False
+                reveal = True
+                #IA gana
+            elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
+                print('IA gana')
+                win_int = 2
+                session = False
+                reveal = True
+            # PLAYER gana
+            elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
+                print('Jugador gana')
+                win_int = 1
+                session = False
+                reveal = True
     if event.type == pygame.MOUSEBUTTONDOWN:
         if boton_x.rect.collidepoint(mouse_pos):
             run_game = False
