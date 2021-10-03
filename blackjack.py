@@ -5,7 +5,6 @@ from pygame import *
 from enum import Enum,IntEnum
 import random
 
-from pruebas import AI_hit
 
 
 
@@ -40,10 +39,10 @@ boton_x = Boton(622,337, imagen_x)
 #################clase carta#######################
 class Carta():
     def __init__(self,suit,simbolo,valor,color):
-        self.value = suit
-        self.value = simbolo
-        self.value = valor
-        self.value = color
+        self.suit = suit
+        self.simbolo = simbolo
+        self.valor = valor
+        self.color = color
 
 #datos de las cartas
 Valor_carta = [11,2,3,4,5,6,7,8,9,10,10,10]
@@ -52,16 +51,15 @@ Suit_carta = list(range(1,5))
 
 #########################clase dealer#####################
 
-class Dealer():
-    def dealer():
-        deck = []
-        for j in range(len(Valor_carta)):
-            for k in Suit_carta:
-                deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k))
+def dealer():
+    deck = []
+    for j in range(len(Valor_carta)):
+         for k in Suit_carta:
+            deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k,'color'))
+    return deck
 
-        return deck
-
-
+original_deck = dealer()
+full_deck = list(original_deck)
 #########################Clase player#########################
 
 
@@ -123,11 +121,15 @@ def obtener_valor_carta(mano):
         if suma > 21 and (len(Aces) != 0): #cuando la suma es mas de 21 y hay un As
             suma -= 10
         return suma
-##########delaer expand
-original_deck = Dealer()
 
 ###########el programa lee las teclas#########
 keys = pygame.key.get_pressed()
+# Boleans
+main_loop = 0
+run_game = True
+reveal = False
+session = True
+spectate = False
 
 #loop#########################################3
 run_game = True
@@ -149,6 +151,13 @@ while run_game:
         player_hand = []
         IA_hand = []
         hidden_hand = []
+    
+    #main loop
+    if main_loop > 0:
+        main_loop += 1
+    if main_loop > 5:
+        main_loop = 0
+
     mouse_pos = pygame.mouse.get_pos()
 
 
@@ -192,9 +201,51 @@ while run_game:
                 win_int = 1
                 session = False
                 reveal = True
+    #el jugador decide pasar
     if event.type == pygame.MOUSEBUTTONDOWN:
-        if boton_x.rect.collidepoint(mouse_pos):
-            run_game = False
+        if boton_x.rect.collidepoint(mouse_pos) and main_loop == 0 and session:
+            main_loop = 1
+
+            AI_hit = IA_elije_carta()
+
+            print("IA: ", end='')
+            print(obtener_valor_carta(IA_hand))
+
+            #evaluar las posibilidades
+            if (AI_hit == False):
+             if obtener_valor_carta(IA_hand) > obtener_valor_carta(player_hand):
+                session = False
+                print("AI gana")
+                win_int = 2
+                reveal = True
+            elif obtener_valor_carta(IA_hand) < obtener_valor_carta(player_hand):
+                session = False
+                print("Jugador gana")
+                win_int = 1
+                reveal = True
+        else:
+            if obtener_valor_carta(IA_hand) > 21 and obtener_valor_carta(player_hand) > 21:
+                session = False
+                print("No hay ganadores")
+                win_int = 6
+                reveal = True
+            elif obtener_valor_carta(IA_hand) > 21:
+                session = False
+                print("IA sobrepasa, jugador gana")
+                win_int = 4
+                reveal = True
+            elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
+                # AI WINS
+                print('IA GANA')
+                win_int = 2
+                session = False
+                reveal = True
+            elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
+                # PLAYER WINS
+                print('Jugador gana')
+                win_int = 1
+                session = False
+                reveal = True
 
     VENTANA.blit(imagen_mano,[500,200])
     VENTANA.blit(imagen_x,[622,280])
@@ -205,6 +256,5 @@ while run_game:
     tiempo.tick(60)
 
 ############delaer expand
-full_deck = list(original_deck)
 
 pygame.quit()
