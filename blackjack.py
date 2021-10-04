@@ -136,6 +136,10 @@ def dibujar_carta():
     VENTANA.blit(valor_IA,(180,144))
     texto_ganador = ganar.render(ganar_str[ganar_int],True,(255,255,255))
     VENTANA.blit(texto_ganador,(710//2-ganar_x[ganar_int],440//2-ganar_y[ganar_int]))
+    valor_PG = Fuente.render(str(Contador_Jugador),True,(255,255,255))
+    VENTANA.blit(valor_PG,(100,190))
+    valor_PP = Fuente.render(str(Contador_IA),True,(255,255,255))
+    VENTANA.blit(valor_PP,(100,245))
 
 ganar_x = [0, 100, 65, 180, 180, 40, 100]
 ganar_y = [0, 30, 30, 30, 30, 30, 30]
