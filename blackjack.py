@@ -22,6 +22,7 @@ fondo = pygame.image.load("fondo.png").convert()
 ####################Boton###############################################################
 imagen_mano = pygame.image.load("mano.png").convert_alpha()
 imagen_x = pygame.image.load("pasar.png").convert_alpha()
+imagen_reiniciar = pygame.image.load("reiniciar.png").convert_alpha()
 #class boton
 class Boton():
     def __init__(self,x,y,image):
@@ -34,6 +35,7 @@ class Boton():
 #crear la instancia del boton
 boton_mano = Boton(622,269, imagen_mano)
 boton_x = Boton(622,337, imagen_x)
+boton_reiniciar = Boton(618,390,imagen_reiniciar)
 
 #################clase carta###########################################################
 class Carta():
@@ -126,6 +128,7 @@ IA_texto = Fuente.render("IA:",0,(255,255,255))
 ganar = pygame.font.SysFont(None,42)
 ganar_int = 0
 ganar_str = ['','Jugador gana', 'IA gana', 'Jugador sobrepasa — IA gana', 'Jugador gana — IA sobrepasa', 'No ganadores']
+
 def dibujar_carta():
     valor_mano = Fuente.render('P:'+ str(obtener_valor_carta(player_hand)),True,(255,255,255))
     VENTANA.blit(valor_mano,(200,344))
@@ -154,17 +157,18 @@ while run_game:
             run_game = False #para cerrarlo solo es darle a la X
 
         #reiniciar juego
-    if keys[pygame.K_ESCAPE]:
-        full_deck = list(original_deck)
-        run_game = True
-        session = True
-        main_loop = 0
-        win_int = 0
-        reveal = False
-        session = True
-        player_hand = []
-        IA_hand = []
-        hidden_hand = []
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if boton_reiniciar.rect.collidepoint(mouse_pos):    
+            full_deck = list(original_deck)
+            run_game = True
+            session = True
+            main_loop = 0
+            win_int = 0
+            reveal = False
+            session = True
+            player_hand = []
+            IA_hand = []
+            hidden_hand = []
     
     #main loop
     if main_loop > 0:
@@ -265,6 +269,7 @@ while run_game:
     VENTANA.blit(fondo,[0,0])
     boton_mano.dibujar()
     boton_x.dibujar()
+    boton_reiniciar.dibujar()
     dibujar_carta()#carta jugador
     VENTANA.blit(IA_texto,(180,144))
     pygame.display.flip()
