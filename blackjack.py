@@ -51,15 +51,15 @@ Simbolo_carta = list(range(1,14))
 Suit_carta = list(range(1,5))
 
 #########################clase dealer####################################################
+class Dealer():
+    def dealer():
+        deck = []
+        for j in range(len(Valor_carta)):
+            for k in Suit_carta:
+                deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k,color))
+        return deck
 
-def dealer():
-    deck = []
-    for j in range(len(Valor_carta)):
-         for k in Suit_carta:
-            deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k,color))
-    return deck
-
-original_deck = dealer()
+original_deck = Dealer.dealer()
 full_deck = list(original_deck)
 
 ########################Repartir cartas###################################################
@@ -161,9 +161,8 @@ while run_game:
         if boton_reiniciar.rect.collidepoint(mouse_pos):    
             full_deck = list(original_deck)
             run_game = True
-            session = True
             main_loop = 0
-            win_int = 0
+            ganar_int = 0
             reveal = False
             session = True
             player_hand = []
