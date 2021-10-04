@@ -1,14 +1,16 @@
-#zona de import
+#zona de import#########################################################################
 from typing import Sequence
 import pygame
 from pygame import *
 from enum import Enum,IntEnum
 import random
 
+from pygame import color
 
 
 
-#######################crear la interfaz grafica#######################
+
+#######################crear la interfaz grafica#####################################
 pygame.init()
 
 VENTANA = pygame.display.set_mode([710,440])
@@ -17,7 +19,7 @@ pygame.display.set_caption("Mesa de Blackjack")
 
 fondo = pygame.image.load("fondo.png").convert()
 
-####################Boton#######################
+####################Boton###############################################################
 imagen_mano = pygame.image.load("mano.png").convert_alpha()
 imagen_x = pygame.image.load("pasar.png").convert_alpha()
 #class boton
@@ -32,11 +34,8 @@ class Boton():
 #crear la instancia del boton
 boton_mano = Boton(622,269, imagen_mano)
 boton_x = Boton(622,337, imagen_x)
-##click##################
 
-
-
-#################clase carta#######################
+#################clase carta###########################################################
 class Carta():
     def __init__(self,suit,simbolo,valor,color):
         self.suit = suit
@@ -49,25 +48,23 @@ Valor_carta = [11,2,3,4,5,6,7,8,9,10,10,10]
 Simbolo_carta = list(range(1,14))
 Suit_carta = list(range(1,5))
 
-#########################clase dealer#####################
+#########################clase dealer####################################################
 
 def dealer():
     deck = []
     for j in range(len(Valor_carta)):
          for k in Suit_carta:
-            deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k,'color'))
+            deck.append(Carta(Valor_carta[j],Simbolo_carta[j],k,color))
     return deck
 
 original_deck = dealer()
 full_deck = list(original_deck)
-#########################Clase player#########################
 
-
-
-########################Repartir cartas######################
+########################Repartir cartas###################################################
 #valores iniciales en las manos del jugador y del IA
 player_hand = []
 IA_hand = []
+hidden_hand = []
 ##Buscar las cartas dentro del array
 def buscar_carta(valor,suit):
     if suit == 'pica':
@@ -121,17 +118,33 @@ def obtener_valor_carta(mano):
         if suma > 21 and (len(Aces) != 0): #cuando la suma es mas de 21 y hay un As
             suma -= 10
         return suma
+#########añadir texto###################################################################
 
-###########el programa lee las teclas#########
+Fuente = pygame.font.SysFont(None,30)
+jugador_texto = Fuente.render("P:",0,(255,255,255))
+IA_texto = Fuente.render("IA:",0,(255,255,255))
+ganar = pygame.font.SysFont(None,42)
+ganar_int = 0
+ganar_str = ['','Jugador gana', 'IA gana', 'Jugador sobrepasa — IA gana', 'Jugador gana — IA sobrepasa', 'No ganadores']
+def dibujar_carta():
+    valor_mano = Fuente.render('P:'+ str(obtener_valor_carta(player_hand)),True,(255,255,255))
+    VENTANA.blit(valor_mano,(200,344))
+    valor_IA = Fuente.render('IA:'+ str(obtener_valor_carta(IA_hand)),True,(255,255,255))
+    VENTANA.blit(valor_IA,(180,144))
+    texto_ganador = ganar.render(ganar_str[ganar_int],True,(255,255,255))
+    VENTANA.blit(texto_ganador,(710//2-ganar_x[ganar_int],440//2-ganar_y[ganar_int]))
+
+ganar_x = [0, 100, 65, 180, 180, 40, 100]
+ganar_y = [0, 30, 30, 30, 30, 30, 30]
+###########el programa lee las teclas#################################################
 keys = pygame.key.get_pressed()
 # Boleans
 main_loop = 0
 run_game = True
 reveal = False
 session = True
-spectate = False
 
-#loop#########################################3
+#loop#########################################3########################################
 run_game = True
 
 while run_game:
@@ -139,6 +152,7 @@ while run_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run_game = False #para cerrarlo solo es darle a la X
+
         #reiniciar juego
     if keys[pygame.K_ESCAPE]:
         full_deck = list(original_deck)
@@ -168,37 +182,37 @@ while run_game:
             main_loop = 1
 
             IA_hit = IA_elije_carta()
-            print("IA", end='')
+            print("IA:", end='')
             print(obtener_valor_carta(IA_hand))
 
             #evaluar las posibilidade
             if obtener_valor_carta(IA_hand) > 21 and obtener_valor_carta(player_hand) > 21:
                 session = False
                 print("No ganadores")
-                win_int = 5
+                ganar_int = 5
                 reveal = True
                 #player gana y IA sobrepasa el numero 
             elif obtener_valor_carta(IA_hand) > 21:
                 session = False
                 print("AI sobrepaso, jugador gana")
-                win_int = 4
+                ganar_int = 4
                 reveal = True
                 #IA gana y player sobrepasa el numero
             elif obtener_valor_carta(player_hand) > 21:   
                 print('Jugador sobrepaso, IA gana')
-                win_int = 3
+                ganar_int = 3
                 session = False
                 reveal = True
                 #IA gana
             elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
                 print('IA gana')
-                win_int = 2
+                ganar_int = 2
                 session = False
                 reveal = True
             # PLAYER gana
             elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
                 print('Jugador gana')
-                win_int = 1
+                ganar_int = 1
                 session = False
                 reveal = True
     #el jugador decide pasar
@@ -216,42 +230,43 @@ while run_game:
              if obtener_valor_carta(IA_hand) > obtener_valor_carta(player_hand):
                 session = False
                 print("AI gana")
-                win_int = 2
+                ganar_int = 2
                 reveal = True
             elif obtener_valor_carta(IA_hand) < obtener_valor_carta(player_hand):
                 session = False
                 print("Jugador gana")
-                win_int = 1
+                ganar_int = 1
                 reveal = True
         else:
             if obtener_valor_carta(IA_hand) > 21 and obtener_valor_carta(player_hand) > 21:
                 session = False
                 print("No hay ganadores")
-                win_int = 6
+                ganar_int = 5
                 reveal = True
             elif obtener_valor_carta(IA_hand) > 21:
                 session = False
                 print("IA sobrepasa, jugador gana")
-                win_int = 4
+                ganar_int = 4
                 reveal = True
             elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
                 # AI WINS
                 print('IA GANA')
-                win_int = 2
+                ganar_int = 2
                 session = False
                 reveal = True
             elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
                 # PLAYER WINS
                 print('Jugador gana')
-                win_int = 1
+                ganar_int = 1
                 session = False
                 reveal = True
 
-    VENTANA.blit(imagen_mano,[500,200])
-    VENTANA.blit(imagen_x,[622,280])
+
     VENTANA.blit(fondo,[0,0])
     boton_mano.dibujar()
     boton_x.dibujar()
+    dibujar_carta()#carta jugador
+    VENTANA.blit(IA_texto,(180,144))
     pygame.display.flip()
     tiempo.tick(60)
 
