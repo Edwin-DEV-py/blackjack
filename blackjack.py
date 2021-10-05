@@ -95,7 +95,7 @@ def jugador_elije_carta():
 
 #asignar carta a la mano del IA
 def IA_elije_carta():
-    if obtener_valor_carta(IA_hand) < 17:
+    if obtener_valor_carta(IA_hand) < 18:
         IA_hand.append(obtener_carta_random())
 
         return True
@@ -132,10 +132,14 @@ ganar_str = ['','Jugador gana', 'IA gana', 'Jugador sobrepasa — IA gana', 'Jug
 def dibujar_carta():
     valor_mano = Fuente.render('P:'+ str(obtener_valor_carta(player_hand)),True,(255,255,255))
     VENTANA.blit(valor_mano,(200,344))
-    valor_IA = Fuente.render('IA:'+ str(obtener_valor_carta(IA_hand)),True,(255,255,255))
-    VENTANA.blit(valor_IA,(180,144))
+    #valor_IA = Fuente.render('IA:'+ str(obtener_valor_carta(IA_hand)),True,(255,255,255))
+    #VENTANA.blit(valor_IA,(180,144))
     texto_ganador = ganar.render(ganar_str[ganar_int],True,(255,255,255))
     VENTANA.blit(texto_ganador,(710//2-ganar_x[ganar_int],440//2-ganar_y[ganar_int]))
+    valor_PG = Fuente.render(str(Contador_Jugador),True,(255,255,255))
+    VENTANA.blit(valor_PG,(100,190))
+    valor_PP = Fuente.render(str(Contador_IA),True,(255,255,255))
+    VENTANA.blit(valor_PP,(100,245))
 
 ganar_x = [0, 100, 65, 180, 180, 40, 100]
 ganar_y = [0, 30, 30, 30, 30, 30, 30]
@@ -147,6 +151,8 @@ run_game = True
 reveal = False
 session = True
 
+Contador_IA = 0
+Contador_Jugador = 0
 #loop#########################################3########################################
 run_game = True
 
@@ -200,24 +206,28 @@ while run_game:
                 print("AI sobrepaso, jugador gana")
                 ganar_int = 4
                 reveal = True
+                Contador_Jugador += 1
                 #IA gana y player sobrepasa el numero
             elif obtener_valor_carta(player_hand) > 21:   
                 print('Jugador sobrepaso, IA gana')
                 ganar_int = 3
                 session = False
                 reveal = True
+                Contador_IA += 1
                 #IA gana
             elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
                 print('IA gana')
                 ganar_int = 2
                 session = False
                 reveal = True
+                Contador_IA += 1
             # PLAYER gana
             elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
                 print('Jugador gana')
                 ganar_int = 1
                 session = False
                 reveal = True
+                Contador_Jugador += 1
     #el jugador decide pasar
     if event.type == pygame.MOUSEBUTTONDOWN:
         if boton_x.rect.collidepoint(mouse_pos) and main_loop == 0 and session:
@@ -235,11 +245,13 @@ while run_game:
                 print("AI gana")
                 ganar_int = 2
                 reveal = True
+                Contador_IA += 1
             elif obtener_valor_carta(IA_hand) < obtener_valor_carta(player_hand):
                 session = False
                 print("Jugador gana")
                 ganar_int = 1
                 reveal = True
+                Contador_Jugador += 1
         else:
             if obtener_valor_carta(IA_hand) > 21 and obtener_valor_carta(player_hand) > 21:
                 session = False
@@ -251,18 +263,21 @@ while run_game:
                 print("IA sobrepasa, jugador gana")
                 ganar_int = 4
                 reveal = True
+                Contador_Jugador += 1
             elif obtener_valor_carta(IA_hand) == 21 and obtener_valor_carta(player_hand) != 21:
                 # AI WINS
                 print('IA GANA')
                 ganar_int = 2
                 session = False
                 reveal = True
+                Contador_IA += 1
             elif obtener_valor_carta(IA_hand) != 21 and obtener_valor_carta(player_hand) == 21:
                 # PLAYER WINS
                 print('Jugador gana')
                 ganar_int = 1
                 session = False
                 reveal = True
+                Contador_Jugador += 1
 
 
     VENTANA.blit(fondo,[0,0])
