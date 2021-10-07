@@ -164,7 +164,7 @@ while run_game:
 
         #reiniciar juego
     if event.type == pygame.MOUSEBUTTONDOWN:
-        if boton_reiniciar.rect.collidepoint(mouse_pos):    
+        if boton_reiniciar.rect.collidepoint(mouse_pos)and ganar_int != 0:    
             full_deck = list(original_deck)
             run_game = True
             main_loop = 0
